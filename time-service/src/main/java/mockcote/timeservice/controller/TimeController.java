@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mockcote.timeservice.dto.SubmissionRequest;
 import mockcote.timeservice.service.TimeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/time")
+@RequestMapping("/submissions")
 public class TimeController {
 
     private final TimeService timeService;
@@ -26,27 +26,29 @@ public class TimeController {
         return ResponseEntity.ok("채점 결과: " + result);
     }
 
-    @PostMapping("/submit")
+    // 로그 저장
+    @PostMapping("/save")
     public ResponseEntity<String> submitResult(@RequestBody SubmissionRequest request) {
 
-        // 요청 데이터 출력 (Slf4j 로그 사용)
-    log.info("userId: {}", request.getUserId());
-    log.info("problemId: {}", request.getProblemId());
-    log.info("startTime: {}", request.getStartTime());
-    log.info("limitTime: {}", request.getLimitTime());
-    log.info("language: {}", request.getLanguage());
-    log.info("submissionResult: {}", request.getSubmissionResult());
+        // 요청 데이터 출력
+        log.info("handle: {}", request.getHandle());
+        log.info("problemId: {}", request.getProblemId());
+        log.info("startTime: {}", request.getStartTime());
+        log.info("limitTime: {}", request.getLimitTime());
+        log.info("language: {}", request.getLanguage());
+        log.info("status: {}", request.getStatus());
 
         // 서비스 로직 호출
         String result = timeService.processSubmission(
-                request.getUserId(),
+                request.getHandle(),
                 request.getProblemId(),
                 java.time.LocalDateTime.parse(request.getStartTime()),
                 request.getLimitTime(),
                 request.getLanguage(),
-                request.getSubmissionResult()
+                request.getStatus()
         );
-    log.info("결과: {}", result); // 결과 로그 출력
-        return ResponseEntity.ok("결과: " + result);
+
+        log.info("결과: {}", result); // 결과 로그 출력
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

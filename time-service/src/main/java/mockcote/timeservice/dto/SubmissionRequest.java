@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubmissionRequest {
-    private Integer userId;
+    private String handle;
     private Integer problemId;
     private String startTime;
     private Integer limitTime;
     private String language;
-    private String submissionResult;
+    private String status;
 }
