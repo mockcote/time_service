@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import mockcote.timeservice.dto.SubmissionRequest;
 import mockcote.timeservice.service.TimeService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +22,7 @@ public class TimeController {
             @RequestParam Integer problemId) {
 
         String result = timeService.checkProblemResult(userId, problemId);
+        
         return ResponseEntity.ok("채점 결과: " + result);
     }
 

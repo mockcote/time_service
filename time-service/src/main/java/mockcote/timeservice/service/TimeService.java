@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import mockcote.timeservice.model.Logs;
 import mockcote.timeservice.repository.LogsRepository;
 import mockcote.timeservice.utils.BaekjoonCrawler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,6 +20,10 @@ public class TimeService {
 
     private final LogsRepository logsRepository;
     private final BaekjoonCrawler baekjoonCrawler;
+
+    private final WebClient webClient;
+    @Value("${statistics-service.url}") // 통계 서비스 URL
+    private String statisticsServiceUrl;
 
     public String checkProblemResult(String userId, Integer problemId) {
         return baekjoonCrawler.checkSubmissionStatus(userId, problemId);
@@ -43,6 +49,13 @@ public class TimeService {
 //      db 저장
         logsRepository.save(data);
 
-        return status; // 상태 반환
+        // 통계 서비스로 post 요청 보내기
+//        String response = webClient.post()
+//                .uri(statisticsServiceUrl) // 통계 서비스의 API 경로
+//                .bodyValue(data)   // 전송할 데이터
+//                .retrieve()       // 응답 처리 시작
+//                .bodyToMono(String.class) // 응답을 Mono<String>으로 변환
+//                .block();         // 블로킹 방식으로 동기 처리
+        return status; // response 반환
     }
 }
