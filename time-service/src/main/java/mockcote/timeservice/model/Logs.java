@@ -19,7 +19,7 @@ public class Logs {
     private Long logId;
 
     @Column(nullable = false)
-    private Integer userId;
+    private String handle;
 
     @Column(nullable = false)
     private Integer problemId;
