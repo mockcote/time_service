@@ -30,8 +30,8 @@ public class TimeServiceImpl implements TimeService {
     private String statisticsServiceUrl;
     
     @Override
-	  public String checkSubmissionStatus(String userId, Integer problemId) throws Exception {
-        return baekjoonCrawler.checkSubmissionStatus(userId, problemId);
+	  public String checkSubmissionStatus(String handle, Integer problemId) throws Exception {
+        return baekjoonCrawler.checkSubmissionStatus(handle, problemId);
     }
 
     @Override

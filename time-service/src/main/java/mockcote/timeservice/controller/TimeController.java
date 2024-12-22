@@ -6,9 +6,11 @@ import mockcote.timeservice.dto.SubmissionRequest;
 import mockcote.timeservice.service.TimeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,11 +22,11 @@ public class TimeController {
     private final TimeService timeService;
 
     @GetMapping("/result")
-    public ResponseEntity<String> checkProblemResult(@RequestParam(name = "userId") String userId,
+    public ResponseEntity<String> checkProblemResult(@RequestParam(name = "handle") String handle,
         @RequestParam(name = "problemId") Integer problemId) {
 
       try {
-        String result = timeService.checkSubmissionStatus(userId, problemId);
+        String result = timeService.checkSubmissionStatus(handle, problemId);
         return ResponseEntity.ok(result);
       } catch (IllegalStateException e) {
         log.error("IllegalStateException 발생: {}", e.getMessage());
