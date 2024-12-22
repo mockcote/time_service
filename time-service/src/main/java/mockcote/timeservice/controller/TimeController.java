@@ -16,19 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/submissions")
 public class TimeController {
-
+  
     private final TimeService timeService;
 
-//    @GetMapping("/result")
-//    public ResponseEntity<String> checkProblemResult(
-//            @RequestParam String userId,
-//            @RequestParam Integer problemId) {
-//
-//        String result = timeService.checkProblemResult(userId, problemId);
-//
-//        return ResponseEntity.ok("채점 결과: " + result);
-//    }
+    @GetMapping("/result")
+    public ResponseEntity<String> checkProblemResult(@RequestParam(name = "userId") String userId,
+        @RequestParam(name = "problemId") Integer problemId) {
 
+      try {
+        String result = timeService.checkSubmissionStatus(userId, problemId);
+        return ResponseEntity.ok(result);
+      } catch (IllegalStateException e) {
+        log.error("IllegalStateException 발생: {}", e.getMessage());
+        return ResponseEntity.badRequest().body("오류: " + e.getMessage());
+      } catch (Exception e) {
+        log.error("예기치 못한 오류 발생: {}", e.getMessage());
+        return ResponseEntity.status(500).body("서버 오류 발생");
+      }
+    }
+  
     // 로그 저장
     @PostMapping("/save")
     public ResponseEntity<String> submitResult(@RequestBody SubmissionRequest request) {

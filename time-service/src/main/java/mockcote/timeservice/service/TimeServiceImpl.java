@@ -24,15 +24,15 @@ public class TimeServiceImpl implements TimeService {
 
     private final LogsRepository logsRepository;
     private final BaekjoonCrawler baekjoonCrawler;
-
     private final WebClient webClient;
 
     @Value("${statistics-service.url}") // 통계 서비스 URL
     private String statisticsServiceUrl;
-
-//    public String checkProblemResult(String userId, Integer problemId) {
-//        return baekjoonCrawler.checkSubmissionStatus(userId, problemId);
-//    }
+    
+    @Override
+	  public String checkSubmissionStatus(String userId, Integer problemId) throws Exception {
+        return baekjoonCrawler.checkSubmissionStatus(userId, problemId);
+    }
 
     @Override
     @Transactional
