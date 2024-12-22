@@ -3,6 +3,7 @@ package mockcote.timeservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mockcote.timeservice.dto.SubmissionRequest;
+import mockcote.timeservice.exception.CustomException;
 import mockcote.timeservice.model.Logs;
 import mockcote.timeservice.repository.LogsRepository;
 import mockcote.timeservice.utils.BaekjoonCrawler;
@@ -30,7 +31,7 @@ public class TimeServiceImpl implements TimeService {
     private String statisticsServiceUrl;
     
     @Override
-	  public String checkSubmissionStatus(String handle, Integer problemId) throws Exception {
+    public String checkSubmissionStatus(String handle, Integer problemId) {
         return baekjoonCrawler.checkSubmissionStatus(handle, problemId);
     }
 
@@ -56,11 +57,16 @@ public class TimeServiceImpl implements TimeService {
         logsRepository.save(data);
 
         // 통계 서비스로 post 요청 보내기
-        HttpStatusCode response = webClient.post()
-                .uri(statisticsServiceUrl+"/stats/history") // 통계 서비스의 API 경로
-                .bodyValue(data)   // 전송할 데이터
-                .exchangeToMono((res) -> Mono.just(res.statusCode()))// 응답을 Mono<String>으로 변환
-                .block();         // 블로킹 방식으로 동기 처리
+        HttpStatusCode response = null;         // 블로킹 방식으로 동기 처리
+        try {
+            response = webClient.post()
+                    .uri(statisticsServiceUrl+"/stats/history") // 통계 서비스의 API 경로
+                    .bodyValue(data)   // 전송할 데이터
+                    .exchangeToMono((res) -> Mono.just(res.statusCode()))// 응답을 Mono<String>으로 변환
+                    .block();
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "통계 서비스 연결 에러");
+        }
         return response.toString(); // response 반환
     }
 
