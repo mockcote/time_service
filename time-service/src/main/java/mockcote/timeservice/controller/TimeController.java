@@ -30,10 +30,11 @@ public class TimeController {
 
     // 로그 저장
     @PostMapping("/save")
-    public ResponseEntity<String> submitResult(@RequestBody @Valid SubmissionRequest request) {
+    public ResponseEntity<?> submitResult(@RequestBody @Valid SubmissionRequest request) {
 
         // 서비스 로직 호출
         String result = timeService.saveLog(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 }
