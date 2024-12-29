@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/mockcote_time?serverTimezone=Asia/Seoul
     username: ssafy
-    password: ssafy
+    password: ssafyssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
     time-zone: Asia/Seoul   # JSON 직렬화 시 시간대 설정
@@ -14,7 +14,7 @@ spring:
       date-time: yyyy-MM-dd'T'HH:mm:ss  # 날짜/시간 포맷 설정
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true         # SQL 보기 좋게 포맷
