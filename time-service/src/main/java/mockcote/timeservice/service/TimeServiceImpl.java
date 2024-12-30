@@ -65,16 +65,14 @@ public class TimeServiceImpl implements TimeService {
             throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "통계 서비스 연결 에러");
         }
 
-        if(data.getStatus().equals("SUCCESS")) {
-            try {
-                response = webClient.post()
-                        .uri(statisticsServiceUrl+"/stats/rank/problem") // 통계 서비스의 API 경로
-                        .bodyValue(data)   // 전송할 데이터
-                        .exchangeToMono((res) -> Mono.just(res.statusCode()))// 응답을 Mono<String>으로 변환
-                        .block();
-            } catch (Exception e) {
-                throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "통계 서비스 연결 에러");
-            }
+        try {
+            response = webClient.post()
+                    .uri(statisticsServiceUrl+"/stats/rank/problem") // 통계 서비스의 API 경로
+                    .bodyValue(data)   // 전송할 데이터
+                    .exchangeToMono((res) -> Mono.just(res.statusCode()))// 응답을 Mono<String>으로 변환
+                    .block();
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "통계 서비스 연결 에러");
         }
         return response.toString(); // response 반환
     }
