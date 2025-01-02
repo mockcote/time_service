@@ -2,6 +2,7 @@ package mockcote.timeservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mockcote.timeservice.dto.SessionContent;
 import mockcote.timeservice.dto.SubmissionRequest;
 import mockcote.timeservice.exception.CustomException;
 import mockcote.timeservice.model.Logs;
@@ -17,10 +18,8 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -30,18 +29,20 @@ public class TimeServiceImpl implements TimeService {
     private final LogsRepository logsRepository;
     private final BaekjoonCrawler baekjoonCrawler;
     private final WebClient webClient;
-    private final Map<String, LocalDateTime> sessions = new HashMap<>();
+    private final ConcurrentHashMap<String, SessionContent> sessions = new ConcurrentHashMap<>();
 
     @Value("${statistics-service.url}") // 통계 서비스 URL
     private String statisticsServiceUrl;
 
     @Override
-    public LocalDateTime timeStart(String handle, LocalDateTime now) {
+    public LocalDateTime timeStart(String handle, Integer problemId, LocalDateTime now) {
         // 이미 세션이 있다면 시작시간 return
-        if(sessions.containsKey(handle)) return sessions.get(handle);
+        if(sessions.containsKey(handle) &&
+                Objects.equals(sessions.get(handle).getProblemId(), problemId)) return sessions.get(handle).getStartTime();
 
         // 세션이 처음이라면 현재시간 return
-        sessions.put(handle, now);
+        sessions.remove(handle);
+        sessions.put(handle, new SessionContent(problemId, now));
         return now;
     }
 
