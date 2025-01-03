@@ -71,9 +71,6 @@ public class TimeServiceImpl implements TimeService {
         data.setDuration((int) duration);
         data.setLanguage(request.getLanguage());
 
-//      duration 소요시간(초) 출력
-        log.info("duration: {}", duration);
-
 //      db 저장
         logsRepository.save(data);
 
