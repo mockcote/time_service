@@ -34,9 +34,7 @@ public class BaekjoonCrawler {
 
         // HTML 테이블에서 결과 찾기
         Element table = document.getElementById("status-table");
-        if (table == null) {
-            throw new IllegalStateException("Status table not found on the page.");
-        }
+        if (table == null) return "NO_RECORD";
 
         // 테이블 행 데이터 파싱
         Elements rows = table.select("tbody tr");

@@ -24,8 +24,8 @@ public class TimeController {
 
     // 문제 풀이 시작
     @PostMapping("/start")
-    public ResponseEntity<?> timeStart(@RequestBody @Valid TimeStartRequest request) {
-        LocalDateTime startTime = timeService.timeStart(request.getHandle(), LocalDateTime.now());
+    public ResponseEntity<?> timeStart(@RequestBody @Valid TimeStartRequest request) {        
+        LocalDateTime startTime = timeService.timeStart(request.getHandle(), request.getProblemId(), LocalDateTime.now());
         return ResponseEntity.ok(startTime.toString());
     }
 
